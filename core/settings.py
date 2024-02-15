@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # 3rd party libraries
+    'phonenumber_field',
+
     # local
     'accounts.apps.AccountsConfig',
 ]
