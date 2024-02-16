@@ -20,3 +20,8 @@ class Transaction(models.Model):
 
     def __str__(self):
         return self.transaction_type
+    
+class Notification(models.Model):
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+    content = models.CharField(max_length=200)
+    created_date = models.DateTimeField(auto_now_add=True)
