@@ -18,3 +18,8 @@ class AccountDetailView(generics.RetrieveUpdateDestroyAPIView):
 class TransactionApilistView(generics.ListCreateAPIView):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
+
+
+class TrnsactionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Transaction.objects.all()
+    serializer_class = TransactionSerializer
