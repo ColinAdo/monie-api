@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from accounts.models import Account, Transaction, Notification
+from accounts.models import Account, Transaction
 
 class AccountAdmin(admin.ModelAdmin):
     list_display = ["user", "balance", "created_date"]
@@ -13,4 +13,3 @@ class NotificationAdmin(admin.ModelAdmin):
 
 admin.site.register(Account, AccountAdmin)
 admin.site.register(Transaction, TransactionAdmin)
-admin.site.register(Notification, NotificationAdmin)
