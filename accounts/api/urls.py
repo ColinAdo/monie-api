@@ -5,11 +5,13 @@ from accounts.api.views import (
     AccountDetailView,
     TransactionApilistView,
     TrnsactionDetailView,
-    NotificationApilistView
+    NotificationApilistView,
+    NotificationDetailView,
 )
 
 urlpatterns = [
-    path('notifications/', NotificationApilistView.as_view(), name="notification"),
+    path('notifications/', NotificationApilistView.as_view(), name="notifications"),
+    path('notifications/<int:pk>/', NotificationDetailView.as_view(), name="notification-detail"),
     path('transactions/', TransactionApilistView.as_view(), name="transactions"),
     path('transactions/<int:pk>/', TrnsactionDetailView.as_view(), name="transaction-detail"),
     path('accounts/', AccountApiView.as_view(), name="accounts"),

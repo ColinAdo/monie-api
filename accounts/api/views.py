@@ -29,3 +29,8 @@ class TrnsactionDetailView(generics.RetrieveUpdateDestroyAPIView):
 class NotificationApilistView(generics.ListCreateAPIView):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
+
+
+class NotificationDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
