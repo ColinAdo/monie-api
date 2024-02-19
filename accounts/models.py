@@ -15,16 +15,10 @@ class Transaction(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     amount = models.DecimalField(default=0.0, max_digits=99999999, decimal_places=2)
     transaction_type = models.CharField(max_length=200, choices=TRANSACTION_TYPES)
+    content = models.CharField(max_length=200, Null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True, null=True)
 
 
     def __str__(self):
         return self.transaction_type
-    
-class Notification(models.Model):
-    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
-    content = models.CharField(max_length=200)
-    created_date = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"{self.content[:20]}..."

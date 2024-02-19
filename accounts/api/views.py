@@ -1,10 +1,9 @@
 from rest_framework import generics
 
-from accounts.models import Account, Transaction, Notification
+from accounts.models import Account, Transaction
 from accounts.api.serializers import (
     AccountSerializer,
     TransactionSerializer,
-    NotificationSerializer,
 )
 
 class AccountApiView(generics.ListCreateAPIView):
@@ -24,13 +23,3 @@ class TransactionApilistView(generics.ListCreateAPIView):
 class TrnsactionDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
-
-
-class NotificationApilistView(generics.ListCreateAPIView):
-    queryset = Notification.objects.all()
-    serializer_class = NotificationSerializer
-
-
-class NotificationDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Notification.objects.all()
-    serializer_class = NotificationSerializer
