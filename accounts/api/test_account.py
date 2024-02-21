@@ -4,8 +4,8 @@ from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
 
-from accounts.models import Account
-from accounts.api.serializers import AccountSerializer
+from accounts.models import Account, Transaction
+from accounts.api.serializers import AccountSerializer, TransactionSerializer
 
 
 class AccountTestCase(APITestCase):
@@ -23,7 +23,7 @@ class AccountTestCase(APITestCase):
         )
 
     def test_create_account_api(self):
-        url = reverse('accounts')
+        url = reverse('accounts-list')
         data = {
             "user": self.user.id,
             "balance": 200
@@ -34,7 +34,7 @@ class AccountTestCase(APITestCase):
         self.assertEqual(Account.objects.count(), 2)
 
     def test_list_accounts_api(self):
-        url = reverse('accounts')
+        url = reverse('accounts-list')
         response = self.client.get(url, format='json')
 
         queryset = Account.objects.all()
@@ -44,7 +44,7 @@ class AccountTestCase(APITestCase):
         self.assertEqual(response.data, expected_date)
 
     def test_account_detail_api(self):
-        url = reverse('account-detail', kwargs={'pk': self.account.id})
+        url = reverse('accounts-detail', kwargs={'pk': self.account.id})
         response = self.client.get(url, format='json')
 
         queryset = Account.objects.get(pk=self.account.id)
@@ -53,3 +53,4 @@ class AccountTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_date)
         self.assertContains(response, self.user.id)
+
