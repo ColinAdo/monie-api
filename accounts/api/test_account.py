@@ -54,3 +54,128 @@ class AccountTestCase(APITestCase):
         self.assertEqual(response.data, expected_date)
         self.assertContains(response, self.user.id)
 
+
+class TransactionTestCase(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        User = get_user_model()
+        cls.user = User.objects.create(
+            username="TestUser",
+            email="TestEmail@test.com",
+        )
+
+        cls.account = Account.objects.create(
+            user=cls.user,
+            balance=1700
+        )
+        cls.transaction1 = Transaction.objects.create(
+            account=cls.account,
+            amount=1700,
+            transaction_type="sent",
+            content="content1",
+        )
+        cls.transaction2 = Transaction.objects.create(
+            account=cls.account,
+            amount=200,
+            transaction_type="airtime",
+            content="content2",
+        )
+        cls.transaction3 = Transaction.objects.create(
+            account=cls.account,
+            amount=2000,
+            transaction_type="received",
+            content="content3",
+        )
+        cls.transaction4 = Transaction.objects.create(
+            account=cls.account,
+            amount=1000,
+            transaction_type="withdraw",
+            content="content4",
+        )
+        cls.transaction5 = Transaction.objects.create(
+            account=cls.account,
+            amount=1000,
+            transaction_type="sent",
+            content="content5",
+        )
+
+    def test_post_transaction(self):
+        url = reverse("transactions-list")
+        data = {
+            "account": self.account.id,
+            "amount": 1000,
+            "transaction_type": "withdraw",
+            "content": "content5",
+        }
+        response = self.client.post(url, data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Transaction.objects.count(), 6)
+
+    def test_get_transactions(self):
+        url = reverse('transactions-list')
+        response = self.client.get(url, format="json")
+
+        queryset = Transaction.objects.all()
+        expected_date = TransactionSerializer(queryset, many=True).data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 5)
+        self.assertEqual(response.data, expected_date)
+        self.assertContains(response, self.account.id)
+
+    def test_retrieve_transactions(self):
+        url = reverse("transactions-detail",
+                      kwargs={'pk': self.transaction1.id})
+        response = self.client.get(url, format="json")
+
+        obj = Transaction.objects.get(id=self.transaction1.id)
+        expected_date = TransactionSerializer(obj).data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_date)
+        self.assertContains(response, "content1")
+
+    def test_get_sent_transaction(self):
+        url = reverse("sent")
+        response = self.client.get(url, format="json")
+
+        queryset = Transaction.objects.filter(transaction_type="sent")
+        expected_date = TransactionSerializer(queryset, many=True).data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_date)
+        self.assertEqual(len(response.data), 2)
+
+    def test_get_received_transaction(self):
+        url = reverse("received")
+        response = self.client.get(url, format="json")
+
+        queryset = Transaction.objects.filter(transaction_type="received")
+        expected_date = TransactionSerializer(queryset, many=True).data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_date)
+        self.assertEqual(len(response.data), 1)
+
+    def test_get_withdraw_transaction(self):
+        url = reverse("withdraw")
+        response = self.client.get(url, format="json")
+
+        queryset = Transaction.objects.filter(transaction_type="withdraw")
+        expected_date = TransactionSerializer(queryset, many=True).data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_date)
+        self.assertEqual(len(response.data), 1)
+
+    def test_get_withdraw_transaction(self):
+        url = reverse("airtime")
+        response = self.client.get(url, format="json")
+
+        queryset = Transaction.objects.filter(transaction_type="airtime")
+        expected_date = TransactionSerializer(queryset, many=True).data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_date)
+        self.assertEqual(len(response.data), 1)
