@@ -22,7 +22,7 @@ class AccountTestCase(APITestCase):
             balance=1700
         )
 
-    def test_create_account_api(self):
+    def test_post_account(self):
         url = reverse('accounts-list')
         data = {
             "user": self.user.id,
@@ -33,7 +33,7 @@ class AccountTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Account.objects.count(), 2)
 
-    def test_list_accounts_api(self):
+    def test_get_accounts(self):
         url = reverse('accounts-list')
         response = self.client.get(url, format='json')
 
@@ -43,7 +43,7 @@ class AccountTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_date)
 
-    def test_account_detail_api(self):
+    def test_retrieve_accounts(self):
         url = reverse('accounts-detail', kwargs={'pk': self.account.id})
         response = self.client.get(url, format='json')
 
