@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, viewsets
 
 from accounts.models import Account, Transaction
 from accounts.api.serializers import (
@@ -6,11 +6,7 @@ from accounts.api.serializers import (
     TransactionSerializer,
 )
 
-class AccountApiView(generics.ListCreateAPIView):
-    queryset = Account.objects.all()
-    serializer_class = AccountSerializer
-
-class AccountDetailView(generics.RetrieveUpdateDestroyAPIView):
+class AccountViewSet(viewsets.ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
 
