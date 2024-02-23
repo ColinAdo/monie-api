@@ -8,7 +8,7 @@ from accounts.models import Account, Transaction
 from accounts.api.serializers import AccountSerializer, TransactionSerializer
 
 
-class AccountTestCase(APITestCase):
+class AccountApiTestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
         User = get_user_model()
@@ -55,7 +55,7 @@ class AccountTestCase(APITestCase):
         self.assertContains(response, self.user.id)
 
 
-class TransactionTestCase(APITestCase):
+class TransactionApiTestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
         User = get_user_model()
