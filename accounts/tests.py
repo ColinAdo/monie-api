@@ -29,7 +29,6 @@ class AccountTestCase(TestCase):
     def test_return_string(self):
         self.assertEqual(str(self.account), self.user.username)
 
-
 class TransactionTestCase(TestCase):
 
     @classmethod
