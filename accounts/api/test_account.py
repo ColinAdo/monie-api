@@ -7,7 +7,6 @@ from rest_framework import status
 from accounts.models import Account, Transaction
 from accounts.api.serializers import AccountSerializer, TransactionSerializer
 
-
 class AccountApiTestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
@@ -53,7 +52,6 @@ class AccountApiTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_date)
         self.assertContains(response, self.user.id)
-
 
 class TransactionApiTestCase(APITestCase):
     @classmethod
