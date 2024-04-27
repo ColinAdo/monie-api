@@ -2,6 +2,7 @@ from pathlib import Path
 from django.core.management.utils import get_random_secret_key 
 import dotenv
 import os
+import random
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -105,7 +106,14 @@ AWS_REGION_NAME = os.getenv('AWS_REGION_NAME')
 
 SENDER_ID = os.getenv('SENDER_ID')
 SMS_MOBILE = os.getenv('SMS_MOBILE')  # Make sure is set in E.164 format.
-SMS_MESSAGE = "<REPLACE_WITH_MESSAGE>"
+
+def random_pin():
+    return random.randint(10000, 99999)
+
+
+SMS_MESSAGE = random_pin()
+print(SMS_MESSAGE)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
