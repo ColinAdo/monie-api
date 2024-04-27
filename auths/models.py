@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import make_password
 from phonenumber_field.modelfields import PhoneNumberField
 
 class CustomUser(AbstractUser):
+    username = models.CharField(max_length=200, unique=False)
     phone_number = PhoneNumberField(unique=True)
     pin = models.CharField(max_length=200)
 
