@@ -5,7 +5,7 @@ from auths.models import CustomUser
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = CustomUser
-        fields = UserCreationForm.Meta.fields + ("phone_number",)
+        fields = UserCreationForm.Meta.fields + ("phone_number", "pin",)
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:

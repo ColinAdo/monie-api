@@ -9,15 +9,14 @@ class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
     list_display = [
         "username",
-        "email",
         "phone_number",
         "is_active",
         "is_superuser",
     ]
 
-    fieldsets = UserAdmin.fieldsets + ((None, {"fields": ("phone_number",)}),)
+    fieldsets = UserAdmin.fieldsets + ((None, {"fields": ("phone_number", "pin", )}),)
 
     add_fieldsets = UserAdmin.add_fieldsets + \
-        ((None, {"fields": ("phone_number",)}),)
+        ((None, {"fields": ("phone_number", "pin", )}),)
 
 admin.site.register(CustomUser, CustomUserAdmin)
