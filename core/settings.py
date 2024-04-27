@@ -98,6 +98,15 @@ REST_FRAMEWORK = {
 }
 
 
+# AWS Credentials
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_REGION_NAME = os.getenv('AWS_REGION_NAME')
+
+SENDER_ID = os.getenv('SENDER_ID')
+SMS_MOBILE = os.getenv('SMS_MOBILE')  # Make sure is set in E.164 format.
+SMS_MESSAGE = "<REPLACE_WITH_MESSAGE>"
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
