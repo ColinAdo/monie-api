@@ -98,6 +98,13 @@ REST_FRAMEWORK = {
     ]
 }
 
+# Djoser settings
+DJOSER = {
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'TOKEN_MODEL': None,
+}
+
 
 # AWS Credentials
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
@@ -112,7 +119,6 @@ def random_pin():
 
 
 SMS_MESSAGE = random_pin()
-print(SMS_MESSAGE)
 
 
 # Password validation
