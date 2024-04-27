@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     # 3rd party libraries
     'rest_framework',
     'phonenumber_field',
+    'djoser',
 
     # local
     'accounts.apps.AccountsConfig',
@@ -84,6 +85,16 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
+
+# Rest framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 }
 
 
