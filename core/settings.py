@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     # 3rd party libraries
     'rest_framework',
     'phonenumber_field',
-    'djoser',
 
     # local
     'accounts.apps.AccountsConfig',
@@ -91,21 +90,13 @@ DATABASES = {
 # Rest framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'core.authentication.CustomJWTAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ]
 }
-
-# Djoser settings
-DJOSER = {
-    'TOKEN_MODEL': None,
-    'SERIALIZERS': {
-        'user_create': 'auths.serializers.CustomUserCreateSerializer',
-    }
-}
-
 
 # AWS Credentials
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
@@ -118,9 +109,15 @@ SMS_MOBILE = os.getenv('SMS_MOBILE')  # Make sure is set in E.164 format.
 def random_pin():
     return random.randint(10000, 99999)
 
-
 SMS_MESSAGE = random_pin()
 
+# Cookies settings 
+AUTH_COOKIE = 'access'
+AUTH_COOKIE_MAX_AGE = 60 * 60 * 24
+AUTH_COOKIE_SECURE = os.getenv('AUTH_COOKIE_SECRET', 'True') == 'True'
+AUTH_COOKIE_HTTP_ONLY = True
+AUTH_COOKIE_SAMESITE = 'None'
+AUTH_COOKIE_PATH = '/'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
