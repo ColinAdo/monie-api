@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
 
     # local
+    'transactions.apps.TransactionsConfig',
     'accounts.apps.AccountsConfig',
     'auths.apps.AuthsConfig',
 ]
