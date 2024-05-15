@@ -23,14 +23,20 @@ class SignUpView(APIView):
         if not username or not phone_number:
             return Response({"error": "Username and phone number are required."}, status=status.HTTP_400_BAD_REQUEST)
 
-
         User = get_user_model()
+        obj = User.objects.get(phone_number=phone_number)
+
+        if obj is not None:
+            return Response({"error": "phone number already exist"}, status=status.HTTP_400_BAD_REQUEST)
+
         User.objects.create(
             username=username,
             phone_number=phone_number,
             # Hash the password
             password=make_password(str(settings.SMS_MESSAGE))  
         )
+
+        # TODO: Send an sms to the give phone number
 
         return Response({"username": username, "phone_number": phone_number, "password": settings.SMS_MESSAGE}, status=status.HTTP_201_CREATED)
     
