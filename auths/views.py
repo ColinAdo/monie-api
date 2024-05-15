@@ -24,17 +24,18 @@ class SignUpView(APIView):
             return Response({"error": "Username and phone number are required."}, status=status.HTTP_400_BAD_REQUEST)
 
         User = get_user_model()
-        obj = User.objects.get(phone_number=phone_number)
+        try:
+            obj = User.objects.get(phone_number=phone_number)
+            if obj is not None:
+                return Response({"error": "phone number already exist"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if obj is not None:
-            return Response({"error": "phone number already exist"}, status=status.HTTP_400_BAD_REQUEST)
-
-        User.objects.create(
-            username=username,
-            phone_number=phone_number,
-            # Hash the password
-            password=make_password(str(settings.SMS_MESSAGE))  
-        )
+        except User.DoesNotExist:
+            User.objects.create(
+                username=username,
+                phone_number=phone_number,
+                # Hash the password
+                password=make_password(str(settings.SMS_MESSAGE))
+            )
 
         # TODO: Send an sms to the give phone number
 
