@@ -33,6 +33,7 @@ class TransactionTestCase(TestCase):
         self.assertEqual(Transaction.objects.count(), 1)
         self.assertEqual(transaction.account, self.account)
         self.assertEqual(transaction.amount, 1000)
+        self.assertEqual(transaction.transaction_type, self.transaction.transaction_type)
 
     def test_return_string(self):
         self.assertEqual(str(self.transaction), "sent")
