@@ -30,6 +30,7 @@ class ReceivedTransaction(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
 
 
+# Withdrew transaction view
 class WithdrawTransaction(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Transaction.objects.filter(transaction_type='withdraw')
