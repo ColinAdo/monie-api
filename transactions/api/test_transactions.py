@@ -9,6 +9,7 @@ from accounts.models import Account
 from transactions.models import Transaction
 from transactions.api.serializers import TransactionSerializer
 
+# Test transactions api
 class AccountApiTestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
