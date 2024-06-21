@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from twilio.rest import Client
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -10,7 +11,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView
 )
-
+import os
 
 class SignUpView(APIView):
     authentication_classes = []
@@ -34,12 +35,22 @@ class SignUpView(APIView):
                 username=username,
                 phone_number=phone_number,
                 # Hash the password
-                password=make_password(str(settings.SMS_MESSAGE))
+                password=make_password(str(settings.SEND_PIN))
             )
 
-        # TODO: Send an sms to the give phone number
+            # TODO: Send an sms to the give phone number
+            account_sid = ''
+            auth_token = ''
+            
 
-        return Response({"username": username, "phone_number": phone_number, "password": settings.SMS_MESSAGE}, status=status.HTTP_201_CREATED)
+            client = Client(account_sid, auth_token)
+            message = client.messages.create(
+                        from_='+13258800697',
+                        to=phone_number,
+                        body=f"Hey {username} \n Your PIN to monie is: {settings.SEND_PIN}"
+                        )
+            
+        return Response({"username": username, "phone_number": phone_number, "message": message.sid}, status=status.HTTP_201_CREATED)
     
 
 
