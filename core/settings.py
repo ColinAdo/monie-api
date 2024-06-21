@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     # 3rd party libraries
     'rest_framework',
     'phonenumber_field',
-    'corsheaders'
+    'corsheaders',
 
     # local
     'transactions.apps.TransactionsConfig',
@@ -94,7 +94,6 @@ DATABASES = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'core.authentication.CustomJWTAuthentication',
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -106,13 +105,16 @@ AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 AWS_REGION_NAME = os.getenv('AWS_REGION_NAME')
 
+TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
 SENDER_ID = os.getenv('SENDER_ID')
-SMS_MOBILE = os.getenv('SMS_MOBILE')  # Make sure is set in E.164 format.
+SENDER = os.getenv('SENDER') 
+
 
 def random_pin():
     return random.randint(10000, 99999)
 
-SMS_MESSAGE = random_pin()
+SEND_PIN = random_pin()
 
 # Cookies settings 
 AUTH_COOKIE = 'access'
