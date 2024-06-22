@@ -39,6 +39,7 @@ INSTALLED_APPS = [
 
     # 3rd party libraries
     'rest_framework',
+    'djoser',
     'corsheaders',
 
     # local
@@ -99,21 +100,31 @@ REST_FRAMEWORK = {
     ]
 }
 
-# AWS Credentials
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-AWS_REGION_NAME = os.getenv('AWS_REGION_NAME')
+# Djoser settings
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': 'password-rest/{uid}/{token}',
+    'ACTIVATION_URL': 'activation/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'TOKEN_MODEL': None,
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': os.getenv('REDIRECT_URIS')
+}
 
-TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
-SENDER_ID = os.getenv('SENDER_ID')
-SENDER = os.getenv('SENDER') 
+# Email settings
+EMAIL_BACKEND = 'django_ses.SESBackend'
+DEFAULT_FROM_EMAIL = os.getenv('AWS_SES_FROM_EMAIL')
 
+AWS_SES_ACCESS_KEY_ID = os.getenv('AWS_SES_ACCESS_KEY_ID')
+AWS_SES_SECRET_ACCESS_KEY = os.getenv('AWS_SES_SECRET_ACCESS_KEY')
+AWS_SES_REGION_NAME = os.getenv('AWS_SES_REGION_NAME')
+AWS_SES_REGION_ENDPOINT = f'email.{AWS_SES_REGION_NAME}.amazonaws.com'
+AWS_SES_FROM_EMAIL = os.getenv('AWS_SES_FROM_EMAIL')
+USE_SES_V2 = True
 
-def random_pin():
-    return random.randint(10000, 99999)
+DOMAIN = os.getenv('DOMAIN')
+SITE_NAME = 'Monie'
 
-SEND_PIN = random_pin()
 
 # Cookies settings 
 AUTH_COOKIE = 'access'
