@@ -1,69 +1,44 @@
 from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password
-from twilio.rest import Client
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from djoser.social.views import ProviderAuthView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView
 )
-import os
 
-class SignUpView(APIView):
-    authentication_classes = []
-    permission_classes = []
+# Custom Provider Authentication view
+class CustomProviderAuthView(ProviderAuthView):
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
 
-    def post(self, request):
-        username = request.data.get('username')
-        phone_number = request.data.get('phone_number')
+        if response.status_code == 201:
+            access_token = response.data.get('access')
+            refresh_token = response.data.get('refresh')
 
-        if not username or not phone_number:
-            return Response({"error": "Username and phone number are required."}, status=status.HTTP_400_BAD_REQUEST)
-
-        User = get_user_model()
-        try:
-            obj = User.objects.get(phone_number=phone_number)
-            if obj is not None:
-                return Response({"error": "phone number already exist"}, status=status.HTTP_400_BAD_REQUEST)
-
-        except User.DoesNotExist:
-            User.objects.create(
-                username=username,
-                phone_number=phone_number,
-                # Hash the password
-                password=make_password(str(settings.SEND_PIN))
+            response.set_cookie(
+                'access',
+                access_token,
+                max_age=settings.AUTH_COOKIE_MAX_AGE,
+                path=settings.AUTH_COOKIE_PATH,
+                secure=settings.AUTH_COOKIE_SECURE,
+                httponly=settings.AUTH_COOKIE_HTTP_ONLY,
+                samesite=settings.AUTH_COOKIE_SAMESITE
+            )
+            response.set_cookie(
+                'refresh',
+                refresh_token,
+                max_age=settings.AUTH_COOKIE_MAX_AGE,
+                path=settings.AUTH_COOKIE_PATH,
+                secure=settings.AUTH_COOKIE_SECURE,
+                httponly=settings.AUTH_COOKIE_HTTP_ONLY,
+                samesite=settings.AUTH_COOKIE_SAMESITE
             )
 
-            # TODO: Send an sms to the give phone number
-            account_sid = ''
-            auth_token = ''
-            
-
-            client = Client(account_sid, auth_token)
-            message = client.messages.create(
-                        from_='+13258800697',
-                        to=phone_number,
-                        body=f"Hey {username} \n Your PIN to monie is: {settings.SEND_PIN}"
-                        )
-            
-        return Response({"username": username, "phone_number": phone_number, "message": message.sid}, status=status.HTTP_201_CREATED)
-    
-
-
-class LogoutView(APIView):
-    authentication_classes = []
-    permission_classes = []
-    def post(self, request, *args, **kwargs):
-        response = Response(status=status.HTTP_204_NO_CONTENT)
-        response.delete_cookie('access')
-        response.delete_cookie('refresh')
-
         return response
-    
+
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
@@ -128,3 +103,12 @@ class CustomTokenVerifyView(TokenVerifyView):
             request.data['token'] = access_token
 
         return super().post(request, *args, **kwargs)
+
+
+class LogoutView(APIView):
+    def post(self, request, *args, **kwargs):
+        response = Response(status=status.HTTP_204_NO_CONTENT)
+        response.delete_cookie('access')
+        response.delete_cookie('refresh')
+
+        return response
