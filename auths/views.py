@@ -39,7 +39,7 @@ class CustomProviderAuthView(ProviderAuthView):
 
         return response
 
-
+# Custom token view
 class CustomTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
