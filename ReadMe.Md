@@ -4,7 +4,7 @@
 
 ### Transactions ERD
 
-![My transactionsRrd](./transactionsRrd.png)
+![My transactionsRrd](./transactionsErd.png)
 
 ### Monie Complete ERD
 
