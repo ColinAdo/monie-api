@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'djoser',
     'social_django',
     'corsheaders',
+    'django_extensions',
 
     # local
     'transactions.apps.TransactionsConfig',
@@ -89,6 +90,12 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
+
+# Graph models settinga
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': False,
 }
 
 # Rest framework settings
