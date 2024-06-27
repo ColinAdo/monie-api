@@ -8,6 +8,9 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 media
+accounts.dot
+transactions.dot
+monie.dot
 
 # Byte-compiled / optimized / DLL files
 *.py[cod]
