@@ -3,6 +3,7 @@ from django.test import TestCase
 
 from accounts.models import Account
 
+# Account Test case 
 class AccountTestCase(TestCase):
 
     @classmethod
