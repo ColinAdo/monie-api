@@ -15,3 +15,5 @@ class UserTestCase(TestCase):
 
     def test_user_contents(self):
         self.assertEqual(self.user.username, 'TestUser')
+        self.assertEqual(self.user.email, 'test@example.com')
+        self.assertEqual(str(self.user), 'TestUser')
