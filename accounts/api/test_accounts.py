@@ -1,12 +1,14 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIRequestFactory
+from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework_simplejwt.tokens import AccessToken
 
 from accounts.models import Account
 from accounts.api.serializers import AccountSerializer
+from accounts.api.permissions import IsOwnerOrReadOnly
 
 class AccountApiTestCase(APITestCase):
     @classmethod
@@ -58,3 +60,42 @@ class AccountApiTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_date)
         self.assertContains(response, self.user.id)
+
+class IsOwnerOrReadOnlyTestCase(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        User = get_user_model()
+        cls.user = User.objects.create(
+            username='testuser',
+            email='testuser@example.com'
+        )
+        cls.other_user = User.objects.create(
+            username='otheruser',
+            email='otheruser@example.com'
+        )
+        cls.account = Account.objects.create(
+            user=cls.user,
+            balance=120000
+        )
+        cls.permission = IsOwnerOrReadOnly()
+        cls.view = APIView()
+        cls.factory = APIRequestFactory()
+
+
+    def test_safe_method_permission(self):
+        request = self.factory.get('/')
+        request.user = self.user
+
+        self.assertTrue(self.permission.has_object_permission(request, self.view, self.account))
+
+    def test_unsafe_method_permission_owner(self):
+        request = self.factory.post('/')
+        request.user = self.user
+
+        self.assertTrue(self.permission.has_object_permission(request, self.view, self.account))
+
+    def test_unsafe_method_permission_non_owner(self):
+        request = self.factory.post('/')
+        request.user = self.other_user
+
+        self.assertFalse(self.permission.has_object_permission(request, self.view, self.account))
