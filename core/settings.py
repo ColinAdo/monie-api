@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'social_django',
     'corsheaders',
     'django_extensions',
+    'django_coverage_plugin',
 
     # local
     'transactions.apps.TransactionsConfig',
@@ -92,11 +93,7 @@ DATABASES = {
     }
 }
 
-# Graph models settinga
-GRAPH_MODELS = {
-  'all_applications': True,
-  'group_models': False,
-}
+
 
 # Rest framework settings
 REST_FRAMEWORK = {
