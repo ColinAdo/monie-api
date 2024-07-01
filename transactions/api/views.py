@@ -6,6 +6,7 @@ from transactions.api.serializers import (
     TransactionSerializer,
 )
 
+# Transaction view
 class TransactionViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Transaction.objects.all()
