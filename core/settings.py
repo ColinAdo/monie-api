@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_extensions',
     'django_coverage_plugin',
+    'drf_spectacular',
 
     # local
     'transactions.apps.TransactionsConfig',
@@ -102,7 +103,17 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# Spectacular settings 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Monie API',
+    'DESCRIPTION': 'Monie API is an API that allows you to manage perosonal finance...',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
 }
 
 # Djoser settings
