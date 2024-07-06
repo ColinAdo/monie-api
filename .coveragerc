@@ -1,0 +1,19 @@
+[run]
+branch = True
+source = core,accounts,auths,transactions
+
+[report]
+omit =
+    */tests/*
+    */migrations/*
+    */admin.py
+    */apps.py
+    */wsgi.py
+    */asgi.py
+    */settings.py
+    */urls.py
+    */manage.py
+    .venv/*
+
+[html]
+directory = coverage-report
