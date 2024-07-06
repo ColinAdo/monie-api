@@ -1,6 +1,6 @@
 [run]
 branch = True
-source = core,accounts,auths,transactions
+source = .
 
 [report]
 omit =
