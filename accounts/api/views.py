@@ -4,7 +4,7 @@ from accounts.models import Account
 from .permissions import IsOwnerOrReadOnly
 from accounts.api.serializers import AccountSerializer
 
-
+# Account viewset
 class AccountViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Account.objects.all()
