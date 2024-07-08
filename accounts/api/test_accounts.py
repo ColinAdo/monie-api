@@ -10,6 +10,7 @@ from accounts.models import Account
 from accounts.api.serializers import AccountSerializer
 from accounts.api.permissions import IsOwnerOrReadOnly
 
+# account test case
 class AccountApiTestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
