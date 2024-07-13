@@ -12,7 +12,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
 
-
+# Airtime transaction view
 class AirtimeTransaction(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Transaction.objects.filter(transaction_type='airtime')
