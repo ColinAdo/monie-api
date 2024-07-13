@@ -64,6 +64,7 @@ class AccountApiTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Transaction.objects.count(), 5)
 
+    # test get transaction
     def test_get_transactions(self):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
         url = reverse('transactions-list')
