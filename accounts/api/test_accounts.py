@@ -62,6 +62,7 @@ class AccountApiTestCase(APITestCase):
         self.assertEqual(response.data, expected_date)
         self.assertContains(response, self.user.id)
 
+# Is owner or read only test case
 class IsOwnerOrReadOnlyTestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
