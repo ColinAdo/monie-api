@@ -77,6 +77,7 @@ class AccountApiTestCase(APITestCase):
         self.assertEqual(response.data, expected_date)
         self.assertEqual(len(response.data), 4)
 
+    # test retrieve transaction
     def test_retrieve_transaction(self):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
         url = reverse('transactions-detail', kwargs={'pk': self.transaction.id})
