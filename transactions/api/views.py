@@ -24,7 +24,7 @@ class SentTransaction(viewsets.ModelViewSet):
     queryset = Transaction.objects.filter(transaction_type='sent')
     serializer_class = TransactionSerializer
 
-
+# Received transaction view
 class ReceivedTransaction(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Transaction.objects.filter(transaction_type='received')
