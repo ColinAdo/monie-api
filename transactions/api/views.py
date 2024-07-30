@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
 
-from transactions.models import Transaction
 from .permissions import IsOwnerOrReadOnly
+from transactions.models import Transaction
 from transactions.api.serializers import (
     TransactionSerializer,
 )
