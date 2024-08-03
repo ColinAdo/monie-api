@@ -1,8 +1,9 @@
 from rest_framework import viewsets, permissions
 
 from accounts.models import Account
-from .permissions import IsOwnerOrReadOnly
 from accounts.api.serializers import AccountSerializer
+
+from .permissions import IsOwnerOrReadOnly
 
 # Account viewset
 class AccountViewSet(viewsets.ModelViewSet):
