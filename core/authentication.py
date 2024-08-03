@@ -1,4 +1,5 @@
 from django.conf import settings
+
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 # Custom authentication
