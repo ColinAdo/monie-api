@@ -4,8 +4,6 @@
 
 ##### coverage run --source='.' manage.py test
 
-##### coverage html
-
 ### Accounts ERD
 
 ![My accountsErd](./accountsErd.png)
