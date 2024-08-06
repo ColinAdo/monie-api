@@ -11,8 +11,8 @@ class AccountTestCase(TestCase):
 
         User = get_user_model()
         cls.user = User.objects.create(
-            username="TestUser",
-            email="test@example.com",
+            username='TestUser',
+            email='test@example.com',
         )
 
         cls.account = Account.objects.create(
