@@ -14,8 +14,8 @@ class UserTestCase(TestCase):
 
         User = get_user_model()
         cls.user = User.objects.create(
-            username="TestUser",
-            email="test@example.com",
+            username='TestUser',
+            email='test@example.com',
         )
 
     def test_user_contents(self):
