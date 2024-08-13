@@ -15,8 +15,8 @@ class AccountApiTestCase(APITestCase):
     def setUpTestData(cls):
         User = get_user_model()
         cls.user = User.objects.create(
-            username="TestUser",
-            email="TestEmail@test.com"
+            username='TestUser',
+            email='TestEmail@test.com'
         )
 
         cls.account = Account.objects.create(
@@ -32,20 +32,20 @@ class AccountApiTestCase(APITestCase):
         cls.airtime = Transaction.objects.create(
             account=cls.account,
             amount=200,
-            transaction_type="airtime",
-            content="content2",
+            transaction_type='airtime',
+            content='content2',
         )
         cls.received = Transaction.objects.create(
             account=cls.account,
             amount=2000,
-            transaction_type="received",
-            content="content3",
+            transaction_type='received',
+            content='content3',
         )
         cls.withdraw = Transaction.objects.create(
             account=cls.account,
             amount=1000,
-            transaction_type="withdraw",
-            content="content4",
+            transaction_type='withdraw',
+            content='content4',
         )
 
         cls.access_token = AccessToken.for_user(cls.user)
@@ -117,10 +117,10 @@ class AccountApiTestCase(APITestCase):
     # Sent transaction
     def test_get_sent_transaction(self):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
-        url = reverse("sent-list")
-        response = self.client.get(url, format="json")
+        url = reverse('sent-list')
+        response = self.client.get(url, format='json')
 
-        queryset = Transaction.objects.filter(transaction_type="sent")
+        queryset = Transaction.objects.filter(transaction_type='sent')
         expected_date = TransactionSerializer(queryset, many=True).data
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -130,10 +130,10 @@ class AccountApiTestCase(APITestCase):
     # Received transaction
     def test_get_received_transaction(self):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
-        url = reverse("received-list")
-        response = self.client.get(url, format="json")
+        url = reverse('received-list')
+        response = self.client.get(url, format='json')
 
-        queryset = Transaction.objects.filter(transaction_type="received")
+        queryset = Transaction.objects.filter(transaction_type='received')
         expected_date = TransactionSerializer(queryset, many=True).data
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -156,10 +156,10 @@ class AccountApiTestCase(APITestCase):
     # Airtime transaction
     def test_get_airtime_transaction(self):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
-        url = reverse("airtime-list")
-        response = self.client.get(url, format="json")
+        url = reverse('airtime-list')
+        response = self.client.get(url, format='json')
 
-        queryset = Transaction.objects.filter(transaction_type="airtime")
+        queryset = Transaction.objects.filter(transaction_type='airtime')
         expected_date = TransactionSerializer(queryset, many=True).data
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
