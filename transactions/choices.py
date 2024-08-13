@@ -1,6 +1,6 @@
 TRANSACTION_TYPES = (
-    ("airtime", "Airtime"),
-    ("sent", "Sent"),
-    ("received", "Received"),
-    ("withdraw", "Withdraw"),
+    ('airtime', 'Airtime'),
+    ('sent', 'Sent'),
+    ('received', 'Received'),
+    ('withdraw', 'Withdraw'),
 )
