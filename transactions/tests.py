@@ -6,7 +6,6 @@ from transactions.models import Transaction
 
 # Transaction endpoints
 class TransactionTestCase(TestCase):
-
     @classmethod
     def setUpTestData(cls):
         User = get_user_model()
