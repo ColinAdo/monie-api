@@ -6,12 +6,13 @@ from transactions.models import Transaction
 
 # Transaction endpoints
 class TransactionTestCase(TestCase):
+    
     @classmethod
     def setUpTestData(cls):
         User = get_user_model()
         cls.user = User.objects.create(
-            username="TestUser",
-            email="test@example.com",
+            username='TestUser',
+            email='test@example.com',
         )
 
         cls.account = Account.objects.create(
@@ -22,7 +23,7 @@ class TransactionTestCase(TestCase):
         cls.transaction = Transaction.objects.create(
             account=cls.account,
             amount=1000,
-            transaction_type="sent"
+            transaction_type='sent'
         )
 
     def test_transaction_content(self):
@@ -35,4 +36,4 @@ class TransactionTestCase(TestCase):
         self.assertEqual(transaction.transaction_type, self.transaction.transaction_type)
 
     def test_return_string(self):
-        self.assertEqual(str(self.transaction), "sent")
+        self.assertEqual(str(self.transaction), 'sent')
