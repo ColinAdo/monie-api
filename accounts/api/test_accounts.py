@@ -12,13 +12,13 @@ from accounts.api.permissions import IsOwnerOrReadOnly
 
 # account test case
 class AccountApiTestCase(APITestCase):
-    
+
     @classmethod
     def setUpTestData(cls):
         User = get_user_model()
         cls.user = User.objects.create(
-            username="TestUser",
-            email="TestEmail@test.com"
+            username='TestUser',
+            email='TestEmail@test.com'
         )
 
         cls.account = Account.objects.create(
