@@ -1,4 +1,5 @@
 from django.conf import settings
+
 from djoser.social.views import ProviderAuthView
 
 from rest_framework.views import APIView
