@@ -1,8 +1,4 @@
-### Monie
-
-#### Test Coverage:
-
-##### coverage run --source='.' manage.py test
+### Monie Backend
 
 ### Accounts ERD
 
