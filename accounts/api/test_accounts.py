@@ -31,8 +31,8 @@ class AccountApiTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
         url = reverse('accounts-list')
         data = {
-            "user": self.user.id,
-            "balance": 200
+            'user': self.user.id,
+            'balance': 200
         }
         response = self.client.post(url, data, format='json')
 
