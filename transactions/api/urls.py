@@ -11,6 +11,7 @@ from transactions.api.views import (
 )
 
 router = SimpleRouter()
+
 router.register('transactions', TransactionViewSet, basename='transactions')
 router.register('withdraw', WithdrawTransaction, basename='withdraw')
 router.register('received', ReceivedTransaction, basename='received')
