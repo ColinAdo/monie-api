@@ -23,6 +23,7 @@ class UserTestCase(TestCase):
         self.assertEqual(self.user.email, 'test@example.com')
         self.assertEqual(str(self.user), 'TestUser')
 
+
 # Custom jwt authentication test case
 class CustomJWTAuthenticationTestCase(TestCase):
     @classmethod
