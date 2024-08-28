@@ -143,10 +143,10 @@ class AccountApiTestCase(APITestCase):
     # Withdraw transaction
     def test_get_withdraw_transaction(self):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
-        url = reverse("withdraw-list")
-        response = self.client.get(url, format="json")
+        url = reverse('withdraw-list')
+        response = self.client.get(url, format='json')
 
-        queryset = Transaction.objects.filter(transaction_type="withdraw")
+        queryset = Transaction.objects.filter(transaction_type='withdraw')
         expected_date = TransactionSerializer(queryset, many=True).data
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
