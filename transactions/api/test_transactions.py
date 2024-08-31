@@ -107,7 +107,7 @@ class AccountApiTestCase(APITestCase):
 
     def test_delete_transaction(self):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
-        url = reverse('transactions-detail', kwargs={"pk": self.transaction.id})
+        url = reverse('transactions-detail', kwargs={'pk': self.transaction.id})
 
         response = self.client.delete(url)
 
