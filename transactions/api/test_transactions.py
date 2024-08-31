@@ -94,9 +94,9 @@ class AccountApiTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
         url = reverse('transactions-detail', kwargs={'pk': self.transaction.id})
         data = {
-            "account": self.account.id,
-            "amount": 150,
-            "transaction_type": "sent"
+            'account': self.account.id,
+            'amount': 150,
+            'transaction_type': 'sent'
         }
         response = self.client.put(url, data, format='json')
 
