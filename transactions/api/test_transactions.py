@@ -55,9 +55,9 @@ class AccountApiTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
         url = reverse('transactions-list')
         data = {
-            "account": self.account.id,
-            "amount": 200,
-            "transaction_type": "withdraw"
+            'account': self.account.id,
+            'amount': 200,
+            'transaction_type': 'withdraw'
         }
         response = self.client.post(url, data, format='json')
 
