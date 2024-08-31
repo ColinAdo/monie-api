@@ -92,7 +92,7 @@ class AccountApiTestCase(APITestCase):
 
     def test_update_transaction(self):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
-        url = reverse('transactions-detail', kwargs={"pk": self.transaction.id})
+        url = reverse('transactions-detail', kwargs={'pk': self.transaction.id})
         data = {
             "account": self.account.id,
             "amount": 150,
