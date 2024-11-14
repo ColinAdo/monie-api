@@ -6,6 +6,8 @@ from accounts.models import Account
 class AccountAdmin(admin.ModelAdmin):
     list_display = [
         'user', 
+        'name', 
+        'description', 
         'balance', 
         'created_date'
     ]
