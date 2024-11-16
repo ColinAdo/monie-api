@@ -8,6 +8,7 @@ class TransactionAdmin(admin.ModelAdmin):
         'account', 
         'amount', 
         'transaction_type', 
+        'description',
         'created_date'
     ]
 
