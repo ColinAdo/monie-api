@@ -27,6 +27,4 @@ class AccountTestCase(TestCase):
         self.assertEqual(Account.objects.count(), 1)
         self.assertEqual(account.user, self.user)
         self.assertEqual(account.balance, 1000)
-
-    def test_return_string(self):
         self.assertEqual(str(self.account), self.user.username)
