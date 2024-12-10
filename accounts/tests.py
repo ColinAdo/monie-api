@@ -20,6 +20,7 @@ class AccountTestCase(TestCase):
             balance=1000
         )
 
+    # testing account data function
     def test_account_content(self):
         account = Account.objects.get(id=1)
 
