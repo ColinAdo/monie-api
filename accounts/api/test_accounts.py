@@ -1,10 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from rest_framework.test import APITestCase, APIRequestFactory
-from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework.test import APITestCase, APIRequestFactory
 
 from accounts.models import Account
 from accounts.api.serializers import AccountSerializer
