@@ -8,7 +8,7 @@ class AccountAdmin(admin.ModelAdmin):
         'user', 
         'name', 
         'description', 
-        'balance', 
+        'amount', 
         'created_date'
     ]
 
