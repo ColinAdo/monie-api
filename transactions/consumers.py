@@ -19,7 +19,7 @@ class AccountConsumer(WebsocketConsumer):
             return
 
         self.username = user.username
-        async_to_sync(self.channel_layer.group_add)(
+        self.channel_layer.group_add(
             self.username, self.channel_name
         )
         self.accept()
@@ -27,10 +27,10 @@ class AccountConsumer(WebsocketConsumer):
         print(f"{self.username} connected")
 
     def disconnect(self, close_code):
-        async_to_sync(self.channel_layer.group_discard)(
+       self.channel_layer.group_discard(
             self.username, self.channel_name
         )
-        print(f"{self.username} disconnected")
+       print(f"{self.username} disconnected")
 
 
     def receive(self, text_data):
@@ -40,7 +40,16 @@ class AccountConsumer(WebsocketConsumer):
         description = data.get("description")
         amount = data.get("amount")
 
-        # Create a new Account instance
+        self.channel_layer.group_send(
+            self.username,
+            {
+                'type': 'chat_message',
+                'name': account_name,
+                'description': description,
+                'amount': amount,
+            }
+            )
+        # self.save_account(account_name, description, amount)
         account = Account.objects.create(
             name=account_name,
             description=description,
@@ -48,11 +57,24 @@ class AccountConsumer(WebsocketConsumer):
             user=self.scope['user']
         )
 
-        # Send a success response
-        self.send(json.dumps({
-            "status": "success",
-            "message": f"Account '{account_name}' created successfully!",
-            "account_id": account.id
+
+    # Sending messages
+    def account_message(self, event):
+        name = event['name']
+        description = event['description']
+        amount = event['amount']
+
+        self.send(text_data=json.dumps({
+            'name': name,
+            'description': description,
+            'amount': amount,
         }))
+
+    # @sync_to_async
+    # def save_account(self, name, description, amount):
+    #     user = self.scope['user']
+
+    #     # Create a new Account instance
+    #     Account.objects.create(user=user, name=name, description=description, amount=amount)
     
     
