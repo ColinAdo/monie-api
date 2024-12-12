@@ -1,13 +1,7 @@
 import json
-
 from asgiref.sync import async_to_sync
-from asgiref.sync import sync_to_async
-
-from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
-from django.core.exceptions import ValidationError
+from channels.generic.websocket import WebsocketConsumer
 from accounts.models import Account
-
-
 import logging
 
 # Account consumer
@@ -19,7 +13,7 @@ class AccountConsumer(WebsocketConsumer):
             return
 
         self.username = user.username
-        self.channel_layer.group_add(
+        async_to_sync(self.channel_layer.group_add)(
             self.username, self.channel_name
         )
         self.accept()
@@ -27,29 +21,23 @@ class AccountConsumer(WebsocketConsumer):
         print(f"{self.username} connected")
 
     def disconnect(self, close_code):
-       self.channel_layer.group_discard(
+        async_to_sync(self.channel_layer.group_discard)(
             self.username, self.channel_name
         )
-       print(f"{self.username} disconnected")
-
+        logging.info(f"User disconnected from room: {self.username}")
+        print(f"{self.username} disconnected")
 
     def receive(self, text_data):
         # Parse the received JSON data
         data = json.loads(text_data)
-        account_name = data.get("name")
-        description = data.get("description")
-        amount = data.get("amount")
+        print("Received", json.dumps(data, indent=2))
 
-        self.channel_layer.group_send(
-            self.username,
-            {
-                'type': 'chat_message',
-                'name': account_name,
-                'description': description,
-                'amount': amount,
-            }
-            )
-        # self.save_account(account_name, description, amount)
+
+        account_name = data['data']['name']
+        description = data['data']['description']
+        amount = data['data']['amount']
+
+        # Save account data to the database
         account = Account.objects.create(
             name=account_name,
             description=description,
@@ -57,9 +45,19 @@ class AccountConsumer(WebsocketConsumer):
             user=self.scope['user']
         )
 
+        # Send the message to the group
+        self.channel_layer.group_send(
+            self.username,
+            {
+                'type': 'account_message',
+                'name': account_name,
+                'description': description,
+                'amount': amount,
+            }
+        )
 
-    # Sending messages
     def account_message(self, event):
+        # Send the message to WebSocket
         name = event['name']
         description = event['description']
         amount = event['amount']
@@ -69,12 +67,3 @@ class AccountConsumer(WebsocketConsumer):
             'description': description,
             'amount': amount,
         }))
-
-    # @sync_to_async
-    # def save_account(self, name, description, amount):
-    #     user = self.scope['user']
-
-    #     # Create a new Account instance
-    #     Account.objects.create(user=user, name=name, description=description, amount=amount)
-    
-    
