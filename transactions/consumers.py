@@ -27,8 +27,8 @@ class AccountConsumer(WebsocketConsumer):
         logging.info(f"User disconnected from room: {self.username}")
         print(f"{self.username} disconnected")
 
+    # Parse the received JSON data
     def receive(self, text_data):
-        # Parse the received JSON data
         data = json.loads(text_data)
         print("Received", json.dumps(data, indent=2))
 
@@ -56,8 +56,8 @@ class AccountConsumer(WebsocketConsumer):
             }
         )
 
+    # Send the message to WebSocket
     def account_message(self, event):
-        # Send the message to WebSocket
         name = event['name']
         description = event['description']
         amount = event['amount']
