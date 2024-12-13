@@ -1,8 +1,9 @@
 import json
+import logging
+
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from accounts.models import Account
-import logging
 
 # Account consumer
 class AccountConsumer(WebsocketConsumer):
