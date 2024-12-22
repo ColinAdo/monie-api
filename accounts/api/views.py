@@ -8,7 +8,7 @@ from .permissions import IsOwnerOrReadOnly
 # Account viewset
 class AccountViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
-    queryset = Account.objects.all()
+    queryset = Account.objects.all().order_by('-created_date')
     serializer_class = AccountSerializer
 
     def perform_create(self, serializer):
