@@ -12,6 +12,8 @@ accounts.dot
 transactions.dot
 monie.dot
 
+dump.rdb
+
 # Byte-compiled / optimized / DLL files
 *.py[cod]
 *$py.class
