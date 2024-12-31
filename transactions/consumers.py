@@ -74,7 +74,37 @@ class AccountConsumer(AsyncWebsocketConsumer):
             )
             await self.save_updated_account(account_id, account_name, description, amount)
 
-        # Send the message to the group if create_transaction oppereation
+        # Send the message to the group if delete account oppereation
+        elif operation == 'delete_account':
+            account_id = data['id']
+            user = self.scope.get('user')
+
+            try:
+                # Fetch the transaction and related fields in a synchronous-safe manner
+                account = await sync_to_async(Account.objects.get)(id=account_id, user=user)
+
+                # Access related fields safely
+                description = account.description
+                amount = str(account.amount) 
+                account_name = account.name
+            except Account.DoesNotExist:
+                logging.error(f"Account with ID {account_id} does not exist.")
+                return
+
+            # Perform the group send
+            await self.channel_layer.group_send(
+                self.username,
+                {
+                    'type': 'delete_account',
+                    'description': description,
+                    'amount': amount,  
+                    'account_name': account_name
+                }
+            )
+
+            await self.save_delete_account(account_id)
+
+        # Send the message to the group if create_transaction operation
         elif operation == 'create_transaction':
             transaction_type = data['data']['transactionType']
             account_name = data['data']['accountName']
@@ -93,7 +123,7 @@ class AccountConsumer(AsyncWebsocketConsumer):
             )
             await self.save_transaction(account_name, transaction_type, description, amount)
         
-        # Send the message to the group if delete_transaction oppereation
+        # Send the message to the group if delete_transaction operation
         elif operation == 'delete_transaction':
             transaction_id = data['id']
 
@@ -148,6 +178,18 @@ class AccountConsumer(AsyncWebsocketConsumer):
             'amount': amount,
         }))
 
+    # Send the deleted account to WebSocket
+    async def delete_account(self, event):
+        account_name = event['account_name']
+        description = event['description']
+        amount = event['amount']
+
+        await self.send(text_data=json.dumps({
+            'account_name': account_name,
+            'description': description,
+            'amount': amount,
+        }))
+
     # Send the created transaction to WebSocket
     async def create_transaction(self, event):
         account_name = event['account_name']
@@ -162,7 +204,7 @@ class AccountConsumer(AsyncWebsocketConsumer):
             'amount': amount,
         }))
 
-    # Send the created transaction to WebSocket
+    # Send the deleted transaction to WebSocket
     async def delete_transaction(self, event):
         account_name = event['account_name']
         description = event['description']
@@ -192,6 +234,18 @@ class AccountConsumer(AsyncWebsocketConsumer):
             account.save()
         except Account.DoesNotExist:
             logging.error(f"Account with ID {account_id} does not exist or does not belong to the user.")
+
+    @sync_to_async
+    def save_delete_account(self, account_id):
+        user = self.scope.get('user')
+        try:
+            account = Account.objects.get(id=account_id, user=user)
+            account.delete()
+        except Transaction.DoesNotExist:
+            logging.error(f"Account with ID {account_id} does not exist or does not belong to the user.")
+        except Exception as e:
+            logging.error(f"An unexpected error occurred while deleting the transaction: {e}")
+
 
     @sync_to_async
     def save_transaction(self, account_name, transaction_type, description, amount):
