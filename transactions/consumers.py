@@ -38,12 +38,13 @@ class AccountConsumer(AsyncWebsocketConsumer):
         print("Received", json.dumps(data, indent=2))
 
         operation = data['event']
-        account_name = data['data']['accountName']
-        description = data['data']['description']
-        amount = data['data']['amount']
+        
 
         # Send the message to the group if create_account oppereation
         if operation == 'create_account':
+            account_name = data['data']['accountName']
+            description = data['data']['description']
+            amount = data['data']['amount']
             await self.channel_layer.group_send(
                 self.username,
                 {
@@ -57,6 +58,10 @@ class AccountConsumer(AsyncWebsocketConsumer):
         # Send the message to the group if update_account oppereation
         elif operation == 'update_account':
             account_id = data['data']['id']
+            account_name = data['data']['accountName']
+            description = data['data']['description']
+            amount = data['data']['amount']
+            
             await self.channel_layer.group_send(
                 self.username,
                 {
@@ -72,6 +77,9 @@ class AccountConsumer(AsyncWebsocketConsumer):
         # Send the message to the group if create_transaction oppereation
         elif operation == 'create_transaction':
             transaction_type = data['data']['transactionType']
+            account_name = data['data']['accountName']
+            description = data['data']['description']
+            amount = data['data']['amount']
 
             await self.channel_layer.group_send(
                 self.username,
@@ -84,7 +92,37 @@ class AccountConsumer(AsyncWebsocketConsumer):
                 }
             )
             await self.save_transaction(account_name, transaction_type, description, amount)
+        
+        # Send the message to the group if delete_transaction oppereation
+        elif operation == 'delete_transaction':
+            transaction_id = data['id']
 
+            try:
+                # Fetch the transaction and related fields in a synchronous-safe manner
+                transaction = await sync_to_async(Transaction.objects.select_related('account').get)(id=transaction_id)
+
+                # Access related fields safely
+                transaction_type = transaction.transaction_type
+                description = transaction.description
+                amount = str(transaction.amount) 
+                account_name = transaction.account.name
+            except Transaction.DoesNotExist:
+                logging.error(f"Transaction with ID {transaction_id} does not exist.")
+                return
+
+            # Perform the group send
+            await self.channel_layer.group_send(
+                self.username,
+                {
+                    'type': 'delete_transaction',
+                    'transaction_type': transaction_type,
+                    'description': description,
+                    'amount': amount,  
+                    'account_name': account_name
+                }
+            )
+
+            await self.save_delete_transaction(transaction_id)
 
     # Send the created account to WebSocket
     async def create_account(self, event):
@@ -110,8 +148,22 @@ class AccountConsumer(AsyncWebsocketConsumer):
             'amount': amount,
         }))
 
-     # Send the created transaction to WebSocket
+    # Send the created transaction to WebSocket
     async def create_transaction(self, event):
+        account_name = event['account_name']
+        description = event['description']
+        transaction_type = event['transaction_type']
+        amount = event['amount']
+
+        await self.send(text_data=json.dumps({
+            'transaction_type': transaction_type,
+            'account_name': account_name,
+            'description': description,
+            'amount': amount,
+        }))
+
+    # Send the created transaction to WebSocket
+    async def delete_transaction(self, event):
         account_name = event['account_name']
         description = event['description']
         transaction_type = event['transaction_type']
@@ -162,3 +214,14 @@ class AccountConsumer(AsyncWebsocketConsumer):
         )
         except Account.DoesNotExist:
             logging.error(f"Account with ID {account} does not exist or does not belong to the user.")
+
+    @sync_to_async
+    def save_delete_transaction(self, transaction_id):
+        try:
+            transaction = Transaction.objects.get(id=transaction_id)
+            transaction.delete()
+        except Transaction.DoesNotExist:
+            logging.error(f"Transaction with ID {transaction_id} does not exist or does not belong to the user.")
+        except Exception as e:
+            logging.error(f"An unexpected error occurred while deleting the transaction: {e}")
+
