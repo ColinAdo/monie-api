@@ -10,5 +10,5 @@ from transactions.api.serializers import (
 # Transaction viewset
 class TransactionViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
-    queryset = Transaction.objects.all()
+    queryset = Transaction.objects.all().order_by('-created_date')
     serializer_class = TransactionSerializer
