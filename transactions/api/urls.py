@@ -12,7 +12,7 @@ router = SimpleRouter()
 router.register('transactions', TransactionViewSet, basename='transactions')
 
 urlpatterns = [
-    path('transaction-analytics/', TransactionAnalyticsAPIView.as_view(), name='transaction-analytics'),
+    path('transaction/analytics/', TransactionAnalyticsAPIView.as_view(), name='transaction-analytics'),
 ]
 
 urlpatterns += router.urls
