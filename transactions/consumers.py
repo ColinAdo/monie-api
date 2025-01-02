@@ -60,7 +60,6 @@ class AccountConsumer(AsyncWebsocketConsumer):
             account_id = data['data']['id']
             account_name = data['data']['accountName']
             description = data['data']['description']
-            amount = data['data']['amount']
             
             await self.channel_layer.group_send(
                 self.username,
@@ -68,11 +67,10 @@ class AccountConsumer(AsyncWebsocketConsumer):
                     'type': 'update_account',
                     'name': account_name,
                     'description': description,
-                    'amount': amount,
                     'id': account_id
                 }
             )
-            await self.save_updated_account(account_id, account_name, description, amount)
+            await self.save_updated_account(account_id, account_name, description)
 
         # Send the message to the group if delete account oppereation
         elif operation == 'delete_account':
@@ -170,12 +168,10 @@ class AccountConsumer(AsyncWebsocketConsumer):
     async def update_account(self, event):
         name = event['name']
         description = event['description']
-        amount = event['amount']
 
         await self.send(text_data=json.dumps({
             'name': name,
             'description': description,
-            'amount': amount,
         }))
 
     # Send the deleted account to WebSocket
@@ -225,12 +221,11 @@ class AccountConsumer(AsyncWebsocketConsumer):
         Account.objects.create(name=account_name, description=description, amount=amount, user=user)
 
     @sync_to_async
-    def save_updated_account(self, account_id, account_name, description, amount):
+    def save_updated_account(self, account_id, account_name, description):
         try:
             account = Account.objects.get(id=account_id, user=self.scope.get('user'))
             account.name = account_name
             account.description = description
-            account.amount = amount
             account.save()
         except Account.DoesNotExist:
             logging.error(f"Account with ID {account_id} does not exist or does not belong to the user.")
