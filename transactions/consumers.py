@@ -249,11 +249,11 @@ class AccountConsumer(AsyncWebsocketConsumer):
             account = Account.objects.get(name=account_name, user=self.scope.get('user'))
             if transaction_type == 'income':
                 amount = Decimal(amount)
-                account.amount += amount 
+                account.amount -= amount 
                 account.save()
             else:
                 amount = Decimal(amount)
-                account.amount -= amount 
+                account.amount += amount 
                 account.save()
             Transaction.objects.create(
             account=account, 
