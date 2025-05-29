@@ -10,14 +10,17 @@ from .permissions import IsOwnerOrReadOnly
 # Account viewset
 class AccountViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
-    queryset = Account.objects.all().order_by('-created_date')
     serializer_class = AccountSerializer
+
+    def get_queryset(self):
+        # Return only transactions belonging to the logged-in user
+        return Account.objects.filter(user=self.request.user).order_by('-created_date')
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 class AccountPieChartAPIView(APIView):
     def get(self, request):
-        accounts = Account.objects.all()
+        accounts = Account.objects.filter(user=request.user)
         data = [{"name": account.name, "value": float(account.amount)} for account in accounts]
         return Response(data)
