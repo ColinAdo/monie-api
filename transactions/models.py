@@ -1,9 +1,11 @@
 from django.db import models
 
 from accounts.models import Account
+from auths.models import CustomUser
 
 # Transaction model
 class Transaction(models.Model):
+    user = models.ForeignKey(CustomUser, related_name='transactions', on_delete=models.CASCADE, null=True, blank=True)
     account = models.ForeignKey(Account, related_name='transactions', on_delete=models.CASCADE)
     amount = models.DecimalField(default=0.0, max_digits=99999999, decimal_places=2)
     transaction_type = models.CharField(max_length=7)

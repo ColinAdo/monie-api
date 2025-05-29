@@ -17,8 +17,12 @@ from transactions.api.serializers import (
 # Transaction viewset
 class TransactionViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
-    queryset = Transaction.objects.all().order_by('-created_date')
     serializer_class = TransactionSerializer
+
+    def get_queryset(self):
+        # Return only transactions belonging to the logged-in user
+        return Transaction.objects.filter(user=self.request.user).order_by('-created_date')
+
 
 
 class TransactionAnalyticsAPIView(APIView):
@@ -34,7 +38,7 @@ class TransactionAnalyticsAPIView(APIView):
 
         # Filter transactions by year
         transactions = (
-            Transaction.objects.filter(created_date__year=year)
+            Transaction.objects.filter(user=request.user, created_date__year=year)
             .annotate(month=TruncMonth('created_date'))
             .values('month')
             .annotate(total_amount=Sum('amount'))
