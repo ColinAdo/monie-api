@@ -256,6 +256,7 @@ class AccountConsumer(AsyncWebsocketConsumer):
                 account.amount += amount 
                 account.save()
             Transaction.objects.create(
+            user=self.scope.get('user'),
             account=account, 
             transaction_type=transaction_type, 
             description=description,
