@@ -22,7 +22,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1,monie-rho.vercel.app').split(',')
 
 
 # Application definition
@@ -155,10 +155,11 @@ SITE_NAME = 'Monie'
 # Cookies settings 
 AUTH_COOKIE = 'access'
 AUTH_COOKIE_MAX_AGE = 60 * 60 * 24
-AUTH_COOKIE_SECURE = os.getenv('AUTH_COOKIE_SECURE', 'True') == 'True'
+AUTH_COOKIE_SECURE = os.getenv('AUTH_COOKIE_SECURE', 'False') == 'True'
 AUTH_COOKIE_HTTP_ONLY = True
 AUTH_COOKIE_SAMESITE = 'None'
 AUTH_COOKIE_PATH = '/'
+CSRF_COOKIE_SECURE = True
 
 # Google Oauth2 settings
 AUTHENTICATION_BACKENDS = (
@@ -194,7 +195,7 @@ SOCIAL_AUTH_GITHUB_EXTRA_DATA = [
 # Corsheaders settings
 CORS_ALLOWED_ORIGINS = os.getenv(
     'CORS_ALLOWED_ORIGINS',
-    'http://localhost:3000, http://127.0.0.1:3000'
+    'http://localhost:3000,http://127.0.0.1:3000,https://monie-rho.vercel.app'
 ).split(',')
 CORS_ALLOW_CREDENTIALS = True
 
