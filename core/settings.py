@@ -30,6 +30,8 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1,monie-rho.vercel
 
 INSTALLED_APPS = [
     'daphne',
+    'auths',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,9 +49,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
 
     # local
-    'transactions.apps.TransactionsConfig',
-    'accounts.apps.AccountsConfig',
-    'auths.apps.AuthsConfig',
+    'transactions',
+    'accounts',
 ]
 
 MIDDLEWARE = [
