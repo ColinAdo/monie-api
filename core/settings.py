@@ -174,7 +174,6 @@ AUTH_COOKIE_SECURE = os.getenv('AUTH_COOKIE_SECURE', 'False') == 'True'
 AUTH_COOKIE_HTTP_ONLY = True
 AUTH_COOKIE_SAMESITE = 'None'
 AUTH_COOKIE_PATH = '/'
-CSRF_COOKIE_SECURE = True
 
 # Google Oauth2 settings
 AUTHENTICATION_BACKENDS = (
@@ -210,7 +209,7 @@ SOCIAL_AUTH_GITHUB_EXTRA_DATA = [
 # Corsheaders settings
 CORS_ALLOWED_ORIGINS = os.getenv(
     'CORS_ALLOWED_ORIGINS',
-    'http://localhost:3000,http://127.0.0.1:3000,https://monie-rho.vercel.app'
+    'http://localhost:3000,http://127.0.0.1:3000,https://monie-rho.vercel.app,https://monie-api-mbnm.onrender.com'
 ).split(',')
 CORS_ALLOW_CREDENTIALS = True
 
