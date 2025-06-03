@@ -209,7 +209,7 @@ SOCIAL_AUTH_GITHUB_EXTRA_DATA = [
 # Corsheaders settings
 CORS_ALLOWED_ORIGINS = os.getenv(
     'CORS_ALLOWED_ORIGINS',
-    'http://localhost:3000,http://127.0.0.1:3000,https://monie-rho.vercel.app,https://monie-api-mbnm.onrender.com'
+    'http://localhost:3000,http://127.0.0.1:3000'
 ).split(',')
 CORS_ALLOW_CREDENTIALS = True
 
