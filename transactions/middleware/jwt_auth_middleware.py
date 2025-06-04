@@ -14,13 +14,18 @@ class JWTAuthMiddleware:
         
         if b'cookie' in headers:
             cookies = headers[b'cookie'].decode()
+            logger.debug(f"Found cookies: {cookies}")  # Debug log
             token = self.get_jwt_token_from_cookies(cookies)
+            logger.debug(f"Extracted token: {token}")  # Debug log
             if token:
-                user = await self.get_user_from_token(token) 
+                user = await self.get_user_from_token(token)
+                logger.debug(f"User from token: {user}")  # Debug log 
                 if user: 
                     scope['user'] = user
                 else:
                     logger.error("User could not be retrieved from the token.")
+            else:
+                logger.error("No cookies found in headers")
 
         return await self.inner(scope, receive, send)
 
