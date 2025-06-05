@@ -17,6 +17,5 @@ class AuthsConfig(AppConfig):
                     email=os.environ.get('DJANGO_SUPERUSER_EMAIL'),
                     password=os.environ.get('DJANGO_SUPERUSER_PASSWORD')
                 )
-                print("✅ Superuser created.")
         except OperationalError:
             pass
