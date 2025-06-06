@@ -1,3 +1,4 @@
+uvloop; sys_platform != "win32"
 anyio==4.9.0
 asgiref==3.8.1
 attrs==24.3.0
@@ -69,7 +70,6 @@ typing_extensions==4.12.2
 uritemplate==4.1.1
 urllib3==2.2.3
 uvicorn==0.34.3
-uvloop==0.21.0
 watchfiles==1.0.5
 websockets==15.0.1
 whitenoise==6.9.0
