@@ -118,17 +118,29 @@ class CustomTokenVerifyView(TokenVerifyView):
 
 class LogoutView(APIView):
     def post(self, request, *args, **kwargs):
-        response = Response(status=status.HTTP_204_NO_CONTENT)
-        response.delete_cookie(
-            'access',
-            path=settings.AUTH_COOKIE_PATH,
-            samesite=settings.AUTH_COOKIE_SAMESITE,
-            domain=settings.AUTH_COOKIE_DOMAIN if not settings.DEBUG else None
-        )
-        response.delete_cookie(
-            'refresh',
-            path=settings.AUTH_COOKIE_PATH,
-            samesite=settings.AUTH_COOKIE_SAMESITE,
-            domain=settings.AUTH_COOKIE_DOMAIN if not settings.DEBUG else None
-        )
+        response = super().post(request, *args, **kwargs)
+
+        if response.status_code == 200:
+            access_token = ''
+            refresh_token = ''
+
+            response.set_cookie(
+                'access',
+                access_token,
+                max_age=settings.AUTH_COOKIE_MAX_AGE,
+                path=settings.AUTH_COOKIE_PATH,
+                secure=settings.AUTH_COOKIE_SECURE,
+                httponly=settings.AUTH_COOKIE_HTTP_ONLY,
+                samesite=settings.AUTH_COOKIE_SAMESITE
+            )
+            response.set_cookie(
+                'refresh',
+                refresh_token,
+                max_age=settings.AUTH_COOKIE_MAX_AGE,
+                path=settings.AUTH_COOKIE_PATH,
+                secure=settings.AUTH_COOKIE_SECURE,
+                httponly=settings.AUTH_COOKIE_HTTP_ONLY,
+                samesite=settings.AUTH_COOKIE_SAMESITE
+            )
+
         return response
