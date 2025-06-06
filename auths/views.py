@@ -116,7 +116,7 @@ class CustomTokenVerifyView(TokenVerifyView):
 
 #         return response
 
-class LogoutView(APIView):
+class LogoutView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
 
