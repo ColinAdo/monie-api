@@ -13,8 +13,7 @@ class AccountViewSet(viewsets.ModelViewSet):
     serializer_class = AccountSerializer
 
     def get_queryset(self):
-        # Return only transactions belonging to the logged-in user
-        return Account.objects.filter(user=self.request.user).order_by('-created_date')
+        return Account.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
