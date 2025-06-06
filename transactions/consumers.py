@@ -6,6 +6,7 @@ from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from accounts.models import Account
 from transactions.models import Transaction
+from django.conf import settings
 
 # Account consumer
 class AccountConsumer(AsyncWebsocketConsumer):
@@ -35,7 +36,9 @@ class AccountConsumer(AsyncWebsocketConsumer):
     # Parse the received JSON data
     async def receive(self, text_data):
         data = json.loads(text_data)
-        print("Received", json.dumps(data, indent=2))
+
+        if settings.DEBUG:
+            print("Received", json.dumps(data, indent=2))
 
         operation = data['event']
         
@@ -44,17 +47,15 @@ class AccountConsumer(AsyncWebsocketConsumer):
         if operation == 'create_account':
             account_name = data['data']['accountName']
             description = data['data']['description']
-            amount = data['data']['amount']
             await self.channel_layer.group_send(
                 self.username,
                 {
                     'type': 'create_account',
                     'name': account_name,
                     'description': description,
-                    'amount': amount
                 }
             )
-            await self.save_account(account_name, description, amount)
+            await self.save_account(account_name, description)
         # Send the message to the group if update_account oppereation
         elif operation == 'update_account':
             account_id = data['data']['id']
@@ -156,12 +157,10 @@ class AccountConsumer(AsyncWebsocketConsumer):
     async def create_account(self, event):
         name = event['name']
         description = event['description']
-        amount = event['amount']
 
         await self.send(text_data=json.dumps({
             'name': name,
             'description': description,
-            'amount': amount,
         }))
 
      # Send the updated account to WebSocket
@@ -215,10 +214,10 @@ class AccountConsumer(AsyncWebsocketConsumer):
         }))
 
     @sync_to_async
-    def save_account(self, account_name, description, amount):
+    def save_account(self, account_name, description):
         user = self.scope.get('user')
 
-        Account.objects.create(name=account_name, description=description, amount=amount, user=user)
+        Account.objects.create(name=account_name, description=description, user=user)
 
     @sync_to_async
     def save_updated_account(self, account_id, account_name, description):
