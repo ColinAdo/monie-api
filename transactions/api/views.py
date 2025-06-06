@@ -25,7 +25,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
 
 
-class TransactionAnalyticsAPIView(APIView):
+class ExpensesAnalyticsAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
@@ -38,7 +38,7 @@ class TransactionAnalyticsAPIView(APIView):
 
         # Filter transactions by year
         transactions = (
-            Transaction.objects.filter(user=request.user, created_date__year=year)
+            Transaction.objects.filter(user=request.user, transaction_type='Expense', created_date__year=year)
             .annotate(month=TruncMonth('created_date'))
             .values('month')
             .annotate(total_amount=Sum('amount'))
