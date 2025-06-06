@@ -122,14 +122,12 @@ class LogoutView(APIView):
         response.delete_cookie(
             'access',
             path=settings.AUTH_COOKIE_PATH,
-            httponly=settings.AUTH_COOKIE_HTTP_ONLY,
             samesite=settings.AUTH_COOKIE_SAMESITE,
             domain=settings.AUTH_COOKIE_DOMAIN if not settings.DEBUG else None
         )
         response.delete_cookie(
             'refresh',
             path=settings.AUTH_COOKIE_PATH,
-            httponly=settings.AUTH_COOKIE_HTTP_ONLY,
             samesite=settings.AUTH_COOKIE_SAMESITE,
             domain=settings.AUTH_COOKIE_DOMAIN if not settings.DEBUG else None
         )
