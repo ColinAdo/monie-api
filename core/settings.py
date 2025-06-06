@@ -265,3 +265,5 @@ if not DEBUG:
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'auths.CustomUser'
+
+SITE_ID = 1
