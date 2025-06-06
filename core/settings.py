@@ -168,7 +168,6 @@ SITE_NAME = 'Monie'
 
 
 # Cookies settings 
-AUTH_COOKIE_DOMAIN = os.getenv('AUTH_COOKIE_DOMAIN')
 AUTH_COOKIE = 'access'
 AUTH_COOKIE_MAX_AGE = 60 * 60 * 24
 AUTH_COOKIE_SECURE = os.getenv('AUTH_COOKIE_SECURE', 'True') == 'True'
