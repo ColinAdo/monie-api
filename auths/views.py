@@ -116,9 +116,13 @@ class CustomTokenVerifyView(TokenVerifyView):
 
 #         return response
 
-class LogoutView(TokenObtainPairView):
+class LogoutView(APIView):
     def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
+        
+        response = Response(
+            {"msg": "Logged out successfully", "isAuthenticated": False, "user": None},
+            status=status.HTTP_200_OK,
+        )
 
         if response.status_code == 200:
             access_token = ''
