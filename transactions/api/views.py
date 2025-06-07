@@ -59,3 +59,39 @@ class ExpensesAnalyticsAPIView(APIView):
             "year": year,
             "data": data
         })
+
+
+class IncomeAnalyticsAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        # Get the year from query parameters or use the current year
+        year = request.query_params.get('year', datetime.now().year)
+        try:
+            year = int(year)
+        except ValueError:
+            return Response({"error": "Invalid year parameter"}, status=400)
+
+        # Filter transactions by year
+        transactions = (
+            Transaction.objects.filter(user=request.user, transaction_type='Income', created_date__year=year)
+            .annotate(month=TruncMonth('created_date'))
+            .values('month')
+            .annotate(total_amount=Sum('amount'))
+            .order_by('month')
+        )
+
+        # Prepare data for the response
+        data = []
+        for i in range(1, 13):  # Iterate over all months
+            month_name = datetime(1900, i, 1).strftime('%b')  # Get month name
+            matching_transaction = next((t for t in transactions if t['month'].month == i), None)
+            data.append({
+                "name": month_name,
+                "amount": matching_transaction['total_amount'] if matching_transaction else 0,
+            })
+
+        return Response({
+            "year": year,
+            "data": data
+        })
