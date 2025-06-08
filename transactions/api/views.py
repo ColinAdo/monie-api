@@ -20,7 +20,7 @@ from transactions.api.serializers import (
     TransactionSerializer,
 )
 
-class ChatWithAIAPIView(APIView):
+class ChatWithAIPIView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
     def post(self, request):
