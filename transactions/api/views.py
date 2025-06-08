@@ -1,5 +1,9 @@
-from django.db.models.functions import TruncMonth
+import os
+
+from django.db.models.functions import TruncMonth, ExtractYear, ExtractMonth
 from django.db.models import Sum
+
+from groq import Groq
 
 from datetime import datetime
 
@@ -9,10 +13,128 @@ from rest_framework.response import Response
 
 from .permissions import IsOwnerOrReadOnly
 
+from accounts.models import Account
+from accounts.api.serializers import AccountSerializer
 from transactions.models import Transaction
 from transactions.api.serializers import (
     TransactionSerializer,
 )
+
+class ChatWithAIAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+
+    def post(self, request):
+        prompt = request.data.get('prompt', '')
+        if not prompt:
+            return Response({"error": "Prompt is required"}, status=400)
+
+        client = Groq(
+            api_key=os.environ.get('GROQ_API_KEY'),
+        )
+
+        """ Feed AI model with user data """
+        # Fetch accounts related to the user
+        accounts = Account.objects.filter(user=request.user)
+        account_serializer = AccountSerializer(accounts, many=True)
+
+        # Fetch income transactions for the user, grouped by year and month
+        income_transactions = (
+            Transaction.objects.filter(user=request.user, transaction_type='Income')
+            .annotate(year=ExtractYear('created_date'), month=ExtractMonth('created_date'))
+            .values('year', 'month')
+            .annotate(total_amount=Sum('amount'))
+            .order_by('year', 'month')
+        )
+
+        # Group by year
+        income_year_map = {}
+        for t in income_transactions:
+            yearly_income = t['year']
+            monthly_income = t['month']
+            income_amount = t['total_amount']
+
+            if yearly_income not in income_year_map:
+                # Initialize all 12 months with 0
+                income_year_map[yearly_income] = {i: 0 for i in range(1, 13)}
+
+            income_year_map[yearly_income][monthly_income] = income_amount
+
+        # Format final data
+        income_data = []
+        for year, monthly_income_dict in sorted(income_year_map.items()):
+            income_months = []
+            for i in range(1, 13):
+                income_month_name = datetime(1900, i, 1).strftime('%b')
+                income_months.append({
+                    "name": income_month_name,
+                    "amount": monthly_income_dict[i]
+                })
+            income_data.append({
+                "year": year,
+                "months": income_months
+            })
+
+        # Fetch expenses transactions for the user, grouped by year and month
+        expenses_transactions = (
+            Transaction.objects.filter(user=request.user, transaction_type='Expense')
+            .annotate(year=ExtractYear('created_date'), month=ExtractMonth('created_date'))
+            .values('year', 'month')
+            .annotate(total_amount=Sum('amount'))
+            .order_by('year', 'month')
+        )
+
+        # Group by year
+        expenses_year_map = {}
+        for t in expenses_transactions:
+            yearly_expenses = t['year']
+            monthly_expenses = t['month']
+            expenses_amount = t['total_amount']
+
+            if yearly_expenses not in expenses_year_map:
+                # Initialize all 12 months with 0
+                expenses_year_map[yearly_expenses] = {i: 0 for i in range(1, 13)}
+
+            expenses_year_map[yearly_expenses][monthly_expenses] = expenses_amount
+
+        # Format final data
+        expenses_data = []
+        for year, monthly_expenses_dict in sorted(expenses_year_map.items()):
+            expenses_months = []
+            for i in range(1, 13):
+                expenses_month_name = datetime(1900, i, 1).strftime('%b')
+                expenses_months.append({
+                    "name": expenses_month_name,
+                    "amount": monthly_expenses_dict[i]
+                })
+            expenses_data.append({
+                "yearly_expenses": year,
+                "months": expenses_months
+            })
+
+
+        user_data = {
+            "accounts": account_serializer.data,
+            "income_data": income_data,
+            "expenses_data": expenses_data,
+        }
+
+        # Create a chat completion request
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"Based on these user data, {user_data} answer based on the following prompt: '{prompt}'. Return the response in a plain text format, without any additional text or quotes.",
+                }
+            ],
+            model="llama-3.3-70b-versatile",
+        )
+
+        # Extract the response content
+        response_content = chat_completion.choices[0].message.content
+
+        # Return the response as JSON
+        return Response({"response": response_content})
+
 
 # Transaction viewset
 class TransactionViewSet(viewsets.ModelViewSet):
