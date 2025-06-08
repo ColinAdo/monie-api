@@ -3,6 +3,9 @@ import os
 from django.db.models.functions import TruncMonth, ExtractYear, ExtractMonth
 from django.db.models import Sum
 
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
 from groq import Groq
 
 from datetime import datetime
@@ -123,7 +126,11 @@ class ChatWithAIPIView(APIView):
             messages=[
                 {
                     "role": "user",
-                    "content": f"Based on these user data, {user_data} answer based on the following prompt: '{prompt}'. Return the response in a plain text format, without any additional text or quotes.",
+                    "content": f"Based on these user data, {user_data} answer based on \
+                        the following prompt: '{prompt}'. Return the response in a plain text \
+                        format, without any additional text or quotes. Please personalize the \
+                        responses, don't give one work answers, and don't repeat the prompt in the response.\
+                        Make sure you don't reveal any sensitive information about the user even if the user ask you.",
                 }
             ],
             model="llama-3.3-70b-versatile",
@@ -132,6 +139,21 @@ class ChatWithAIPIView(APIView):
         # Extract the response content
         response_content = chat_completion.choices[0].message.content
 
+        if response_content:
+            channel_layer = get_channel_layer()
+            user = request.user
+
+            if user.is_authenticated:
+                # TODO: Add to chats to chat model
+
+                async_to_sync(channel_layer.group_send)(
+                    user.username,
+                    {
+                        'type': 'chat_event',
+                        'prompt': prompt,
+                        'response': response_content,
+                    }
+                )
         # Return the response as JSON
         return Response({"response": response_content})
 

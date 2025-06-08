@@ -209,6 +209,16 @@ class AccountConsumer(AsyncWebsocketConsumer):
             'amount': amount,
         }))
 
+    async def chat_event(self, event):
+        prompt = event['prompt']
+        response = event['response']
+
+        await self.send(text_data=json.dumps({
+            'type': 'chat_event',
+            'prompt': prompt,
+            'response': response,
+        }))
+
     @sync_to_async
     def save_account(self, account_name, description):
         user = self.scope.get('user')
