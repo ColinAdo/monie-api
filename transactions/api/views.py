@@ -18,7 +18,7 @@ from .permissions import IsOwnerOrReadOnly
 
 from accounts.models import Account
 from accounts.api.serializers import AccountSerializer
-from transactions.models import Transaction
+from transactions.models import Transaction, Chat
 from transactions.api.serializers import (
     TransactionSerializer,
 )
@@ -145,6 +145,12 @@ class ChatWithAIPIView(APIView):
 
             if user.is_authenticated:
                 # TODO: Add to chats to chat model
+                Chat.objects.create(
+                    user=user,
+                    prompt=prompt,
+                    response=response_content
+                )
+
 
                 async_to_sync(channel_layer.group_send)(
                     user.username,
