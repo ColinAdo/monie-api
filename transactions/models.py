@@ -14,3 +14,12 @@ class Transaction(models.Model):
 
     def __str__(self):
         return self.transaction_type
+    
+
+class Chat(models.Model):
+    user = models.ForeignKey(CustomUser, related_name='chats', on_delete=models.CASCADE)
+    prompt = models.CharField(max_length=255, null=True, blank=True)
+    response = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Chat by {self.user.username}"
