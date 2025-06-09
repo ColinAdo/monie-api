@@ -5,6 +5,8 @@ pip install -r requirements.txt
 
 python manage.py collectstatic --no-input
 
-python manage.py makemigrations --noinput
+# Temporarily fake the migration to get past the stuck state
+python manage.py migrate transactions --fake-initial
 
-python manage.py migrate --noinput
+# Then force apply all real pending migrations
+python manage.py migrate
