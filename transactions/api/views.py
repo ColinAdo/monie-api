@@ -20,8 +20,17 @@ from accounts.models import Account
 from accounts.api.serializers import AccountSerializer
 from transactions.models import Transaction, Chat
 from transactions.api.serializers import (
+    ChatSerializer,
     TransactionSerializer,
 )
+
+class ChatView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    
+    def get(self, request):
+        chats = Chat.objects.filter(user=request.user)
+        serializer = ChatSerializer(chats, many=True)
+        return Response(serializer.data)
 
 class ChatWithAIPIView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
