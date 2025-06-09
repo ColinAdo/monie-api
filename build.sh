@@ -4,11 +4,15 @@ set -o errexit
 pip install -r requirements.txt
 python manage.py collectstatic --no-input
 
-# Make sure migrations folder exists
+# Create migrations for all apps
+mkdir -p auths/migrations/
 mkdir -p transactions/migrations/
+touch auths/migrations/__init__.py
+touch transactions/migrations/__init__.py
 
-# Force create initial migration if missing
-python manage.py makemigrations transactions --noinput || true
+# Generate migrations for all apps
+python manage.py makemigrations auths || echo "Could not make auths migrations"
+python manage.py makemigrations transactions || echo "Could not make transactions migrations"
 
-# Apply migrations
+# Apply all migrations
 python manage.py migrate
