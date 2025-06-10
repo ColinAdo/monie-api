@@ -233,7 +233,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 if DEBUG == False:
     CSRF_TRUSTED_ORIGINS = [
-        'https://monie-rho.vercel.app',
+        'https://monie.colinadore.tech',
     ]
 
 # Password validation
