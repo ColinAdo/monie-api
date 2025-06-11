@@ -149,8 +149,14 @@ DJOSER = {
 }
 
 # Email settings
-EMAIL_BACKEND = 'django_ses.SESBackend'
-DEFAULT_FROM_EMAIL = os.getenv('AWS_SES_FROM_EMAIL')
+# EMAIL_BACKEND = 'django_ses.SESBackend'
+EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+
+SENDGRID_SANDBOX_MODE_IN_DEBUG = False
+SENDGRID_ECHO_TO_STDOUT = True
+
+SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 
 AWS_SES_ACCESS_KEY_ID = os.getenv('AWS_SES_ACCESS_KEY_ID')
 AWS_SES_SECRET_ACCESS_KEY = os.getenv('AWS_SES_SECRET_ACCESS_KEY')
