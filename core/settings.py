@@ -138,6 +138,38 @@ SPECTACULAR_SETTINGS = {
 }
 
 # Djoser settings
+# DJOSER = {
+#     'PASSWORD_RESET_CONFIRM_URL': 'password-reset/{uid}/{token}',
+#     'ACTIVATION_URL': 'activation/{uid}/{token}',
+#     'SEND_ACTIVATION_EMAIL': True,
+#     'USER_CREATE_PASSWORD_RETYPE': True,
+#     'PASSWORD_RESET_CONFIRM_RETYPE': True,
+#     'TOKEN_MODEL': None,
+#     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': os.getenv('REDIRECT_URIS').split(','),
+# }
+
+# # Email settings
+# # EMAIL_BACKEND = 'django_ses.SESBackend'
+# EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
+# DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+
+# SENDGRID_SANDBOX_MODE_IN_DEBUG = False
+# SENDGRID_ECHO_TO_STDOUT = False
+
+# SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # More reliable than sendgrid_backend
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'apikey'  # Literally the word 'apikey'
+EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_API_KEY')  # Your SendGrid API key
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')  # e.g., 'no-reply@mail.colinadore.tech'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL  # Important for error emails
+
+# Djoser settings
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': 'password-reset/{uid}/{token}',
     'ACTIVATION_URL': 'activation/{uid}/{token}',
@@ -146,17 +178,13 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
     'TOKEN_MODEL': None,
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': os.getenv('REDIRECT_URIS').split(','),
+    'EMAIL': {
+        'activation': 'djoser.email.ActivationEmail',
+        'password_reset': 'djoser.email.PasswordResetEmail',
+    }
 }
 
-# Email settings
-# EMAIL_BACKEND = 'django_ses.SESBackend'
-EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
-SENDGRID_SANDBOX_MODE_IN_DEBUG = False
-SENDGRID_ECHO_TO_STDOUT = True
-
-SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 
 AWS_SES_ACCESS_KEY_ID = os.getenv('AWS_SES_ACCESS_KEY_ID')
 AWS_SES_SECRET_ACCESS_KEY = os.getenv('AWS_SES_SECRET_ACCESS_KEY')
