@@ -169,6 +169,8 @@ EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_API_KEY')  # Your SendGrid API key
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')  # e.g., 'no-reply@mail.colinadore.tech'
 SERVER_EMAIL = DEFAULT_FROM_EMAIL  # Important for error emails
 
+SENDGRID_ECHO_TO_STDOUT = True
+
 # Djoser settings
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': 'password-reset/{uid}/{token}',
