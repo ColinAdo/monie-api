@@ -146,6 +146,10 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
     'TOKEN_MODEL': None,
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': os.getenv('REDIRECT_URIS').split(','),
+    'EMAIL': {
+        'activation': 'djoser.email.ActivationEmail',
+        'subject': 'Verify your Monie account - Action required'
+    }
 }
 
 # Email settings
