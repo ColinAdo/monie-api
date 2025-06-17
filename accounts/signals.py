@@ -10,6 +10,6 @@ def create_account_for_new_user(sender, instance, created, **kwargs):
     if created:
         Account.objects.create(
             user=instance,
-            name='Income',  
-            description="Income account"
+            name='Main',  
+            description="Main account"
         )

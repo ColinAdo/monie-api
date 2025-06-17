@@ -252,7 +252,7 @@ class AccountConsumer(AsyncWebsocketConsumer):
         
         try:
             account = Account.objects.get(name=account_name, user=self.scope.get('user'))
-            if account_name == 'Income':
+            if account_name == 'Main':
                 amount = Decimal(amount)
                 account.amount += amount 
                 account.save()
@@ -265,14 +265,14 @@ class AccountConsumer(AsyncWebsocketConsumer):
                 amount=amount
                 )
             else:
-                income_account = Account.objects.get(name='Income', user=self.scope.get('user'))
+                main_account = Account.objects.get(name='Main', user=self.scope.get('user'))
 
                 amount = Decimal(amount)
                 account.amount += amount 
                 account.save()
 
-                income_account.amount -= amount
-                income_account.save()
+                main_account.amount -= amount
+                main_account.save() 
 
                 Transaction.objects.create(
                 user=self.scope.get('user'),
