@@ -6,6 +6,7 @@ from transactions.api.views import (
     ChatView,
     ChatWithAIPIView,
     TransactionViewSet,
+    IncomeTransactionView,
     IncomeAnalyticsAPIView,
     ExpensesAnalyticsAPIView,
 )
@@ -19,6 +20,7 @@ urlpatterns = [
     path('chat/ai/analytics/', ChatWithAIPIView.as_view(), name='chat-with-ai'),
     path('income/analytics/', IncomeAnalyticsAPIView.as_view(), name='incomes-analytics'),
     path('expenses/analytics/', ExpensesAnalyticsAPIView.as_view(), name='expenses-analytics'),
+    path('income/transactions/', IncomeTransactionView.as_view(), name='expenses-analytics'),
 ]
 
 urlpatterns += router.urls

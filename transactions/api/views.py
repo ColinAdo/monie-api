@@ -24,6 +24,26 @@ from transactions.api.serializers import (
     TransactionSerializer,
 )
 
+class IncomeTransactionView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+
+    def get(self, request):
+        year = request.query_params.get('year', datetime.now().year)
+        incomes = Transaction.objects.filter(
+            user=request.user,
+            transaction_type='Income',
+            created_date__year=year
+        ).order_by('-created_date')
+
+        serializer = TransactionSerializer(incomes, many=True)
+        
+        total = incomes.aggregate(total_amount=Sum('amount'))['total_amount'] or 0
+
+        return Response({
+            "total_income": total,
+            "transactions": serializer.data
+        })
+
 class ChatView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     
