@@ -13,7 +13,7 @@ class AccountViewSet(viewsets.ModelViewSet):
     serializer_class = AccountSerializer
 
     def get_queryset(self):
-        return Account.objects.filter(user=self.request.user)
+        return Account.objects.filter(user=self.request.user).order_by('created_date')
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
