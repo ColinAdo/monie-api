@@ -23,7 +23,8 @@ class AccountConsumer(AsyncWebsocketConsumer):
         )
         await self.accept()
         logging.info(f'User connected to room: {self.username}')
-        print(f"{self.username} connected")
+        if settings.DEBUG:
+            print(f"{self.username} connected")
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -31,7 +32,8 @@ class AccountConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         logging.info(f"User disconnected from room: {self.username}")
-        print(f"{self.username} disconnected")
+        if settings.DEBUG:
+            print(f"{self.username} disconnected")
 
     # Parse the received JSON data
     async def receive(self, text_data):
