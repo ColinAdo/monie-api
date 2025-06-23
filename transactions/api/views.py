@@ -181,7 +181,10 @@ class ChatWithAIPIView(APIView):
                         the following prompt: '{prompt}'. Return the response in a plain text \
                         format, without any additional text or quotes. Please personalize the \
                         responses, don't give one work answers, and don't repeat the prompt in the response.\
-                        Make sure you don't reveal any sensitive information about the user even if the user ask you.",
+                        Make sure you don't reveal any sensitive information about the user even if the user \
+                         ask you. Please be strict about financial information only!\
+                        If user ask for support, give theme my email address: inbox@mail.colinadore.tech. \
+                        The developer of this app is Colin Ado.",
                 }
             ],
             model="llama-3.3-70b-versatile",
