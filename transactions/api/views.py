@@ -183,6 +183,7 @@ class ChatWithAIPIView(APIView):
                         responses, don't give one work answers, and don't repeat the prompt in the response.\
                         Make sure you don't reveal any sensitive information about the user even if the user \
                          ask you. Please be strict about financial information only!\
+                         A user can only have 8 accounts. \
                         If user ask for support, give theme my email address: inbox@mail.colinadore.tech. \
                         The developer of this app is Colin Ado.",
                 }
